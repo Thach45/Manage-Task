@@ -10,8 +10,26 @@ module.exports.index = async (req, res) => {
         if(req.query.sortKey && req.query.sortValue){
             sort[req.query.sortKey] = req.query.sortValue;
         }
-        console.log(sort);
-        const tasks = await Task.find(find).sort(sort);;
+        //Phân trang
+        let pagination = {
+            current: 1,
+            limitPage: 2
+        }
+        if (req.query.page) {
+            pagination.current = parseInt(req.query.page);
+            pagination.limitPage = parseInt(req.query.limit) || 4;
+        }
+        pagination.skip = (pagination.current - 1) * pagination.limitPage;
+    
+    
+        //Đếm tổng số trang
+        let count = await Task.countDocuments(find);
+        const total = Math.ceil(count / pagination.limitPage);
+        pagination.page = total;
+
+
+
+        const tasks = await Task.find(find).sort(sort).limit(pagination.limitPage).skip(pagination.skip);;
         res.json(tasks);
 }
 
