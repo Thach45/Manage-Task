@@ -26,7 +26,11 @@ module.exports.index = async (req, res) => {
         let count = await Task.countDocuments(find);
         const total = Math.ceil(count / pagination.limitPage);
         pagination.page = total;
-
+        // tìm kiếm
+        if(req.query.search){
+            find.title = new RegExp(req.query.search, 'i');
+        }
+        console.log(find);
 
 
         const tasks = await Task.find(find).sort(sort).limit(pagination.limitPage).skip(pagination.skip);;
