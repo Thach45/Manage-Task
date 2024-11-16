@@ -47,3 +47,15 @@ module.exports.detail = async (req, res) => {
         res.json({message: 'Task not found'});
     }
 }
+
+module.exports.changeStatus = async (req, res) => {
+    try{
+        const id = req.params.id;
+        const status = req.body.status;
+        await Task.updateOne({_id: id}, {status: status});
+        res.json({message: 'Change status success', code: 200});
+    }
+    catch(error){
+        res.json({message: 'Task not found'});
+    }
+};
