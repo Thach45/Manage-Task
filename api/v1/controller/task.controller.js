@@ -30,13 +30,12 @@ module.exports.index = async (req, res) => {
         if(req.query.search){
             find.title = new RegExp(req.query.search, 'i');
         }
-        console.log(find);
 
 
         const tasks = await Task.find(find).sort(sort).limit(pagination.limitPage).skip(pagination.skip);;
         res.json(tasks);
 }
-
+// Lấy chi tiết task /api/v1/task/detail/:id
 module.exports.detail = async (req, res) => {
     try{
         const id = req.params.id;
@@ -47,7 +46,7 @@ module.exports.detail = async (req, res) => {
         res.json({message: 'Task not found'});
     }
 }
-
+// Thay đổi trạng thái task /api/v1/task/change-status/:id
 module.exports.changeStatus = async (req, res) => {
     try{
         const id = req.params.id;
@@ -59,3 +58,22 @@ module.exports.changeStatus = async (req, res) => {
         res.json({message: 'Task not found'});
     }
 };
+// Thay đổi trạng thái nhiều task /api/v1/task/change-multi
+module.exports.changeMultiStatus = async (req, res) => {
+    try{ 
+        // Lấy thông tin từ body
+        const {ids, key, value} = req.body;
+        // Thay đổi trạng thái
+        switch(key){
+            case 'status':
+                await Task.updateMany({_id: {$in: ids}}, {status: value});
+                break;
+            default:
+                break;
+        }
+        res.json({message: 'Change status success', code: 200});
+    }
+    catch(error){
+        res.json({message: 'Task not found'});
+    }
+}
