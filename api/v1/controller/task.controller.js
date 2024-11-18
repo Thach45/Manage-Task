@@ -35,7 +35,7 @@ module.exports.index = async (req, res) => {
         const tasks = await Task.find(find).sort(sort).limit(pagination.limitPage).skip(pagination.skip);;
         res.json(tasks);
 }
-// Lấy chi tiết task /api/v1/task/detail/:id
+// Lấy chi tiết task [GET]/api/v1/task/detail/:id
 module.exports.detail = async (req, res) => {
     try{
         const id = req.params.id;
@@ -46,7 +46,7 @@ module.exports.detail = async (req, res) => {
         res.json({message: 'Task not found'});
     }
 }
-// Thay đổi trạng thái task /api/v1/task/change-status/:id
+// Thay đổi trạng thái task [PATCH]/api/v1/task/change-status/:id
 module.exports.changeStatus = async (req, res) => {
     try{
         const id = req.params.id;
@@ -58,7 +58,7 @@ module.exports.changeStatus = async (req, res) => {
         res.json({message: 'Task not found'});
     }
 };
-// Thay đổi trạng thái nhiều task /api/v1/task/change-multi
+// Thay đổi trạng thái nhiều task [PATCH]/api/v1/task/change-multi
 module.exports.changeMultiStatus = async (req, res) => {
     try{ 
         // Lấy thông tin từ body
@@ -75,5 +75,18 @@ module.exports.changeMultiStatus = async (req, res) => {
     }
     catch(error){
         res.json({message: 'Task not found'});
+    }
+}
+
+// Tạo task [POST]/api/v1/task/create
+module.exports.create = async (req, res) => {
+    try {
+        const task = await Task.create(req.body);
+        res.json(task);
+    } catch (error) {
+        res.status(400).json({ 
+            message: "Create task failed",
+            error: error.message 
+        });
     }
 }
