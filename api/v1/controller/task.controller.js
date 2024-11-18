@@ -67,11 +67,16 @@ module.exports.changeMultiStatus = async (req, res) => {
         switch(key){
             case 'status':
                 await Task.updateMany({_id: {$in: ids}}, {status: value});
+                res.json({message: 'Change status success', code: 200});
+                break;
+            case 'deleted':
+                await Task.updateMany({_id: {$in: ids}}, {deleted: true});
+                res.json({message: 'Change deleted success', code: 200});
                 break;
             default:
                 break;
         }
-        res.json({message: 'Change status success', code: 200});
+        
     }
     catch(error){
         res.json({message: 'Task not found'});
@@ -98,5 +103,15 @@ module.exports.edit = async (req, res) => {
         res.json(task);
     } catch (error) {
         res.status(400).json({ message: "Edit task failed", error: error.message });
+    }
+}
+// Xóa task [DELETE]/api/v1/task/delete/:id
+module.exports.delete = async (req, res) => {
+    try {
+        const id = req.params.id;
+        await Task.updateOne({_id: id}, {deleted: true});
+        res.json({message: 'Delete task success', code: 200});
+    } catch (error) {
+        res.status(400).json({ message: "Delete task failed", error: error.message });
     }
 }
