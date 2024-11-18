@@ -90,3 +90,13 @@ module.exports.create = async (req, res) => {
         });
     }
 }
+// Sửa task [PATCH]/api/v1/task/edit/:id
+module.exports.edit = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const task = await Task.findByIdAndUpdate(id, req.body);
+        res.json(task);
+    } catch (error) {
+        res.status(400).json({ message: "Edit task failed", error: error.message });
+    }
+}

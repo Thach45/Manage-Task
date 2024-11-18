@@ -6,4 +6,6 @@ router.get('/detail/:id', taskController.detail);
 router.patch("/change-status/:id", taskController.changeStatus);
 router.patch("/change-multi", taskController.changeMultiStatus);
 router.post("/create", taskController.create);
+// router.delete("/delete/:id", taskController.delete);
+router.patch("/edit/:id", taskController.edit);
 module.exports = router;
